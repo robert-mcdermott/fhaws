@@ -1,6 +1,5 @@
 import boto3
 
-
 def getaccounts(profile):
     session = boto3.Session(profile_name=profile)
     client = session.client("organizations")
