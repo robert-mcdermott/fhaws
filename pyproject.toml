@@ -1,0 +1,13 @@
+[tool.poetry]
+name = "fhaws"
+version = "0.1.0"
+description = "Helper functions to make working with Boto3 easier"
+authors = ["Robert McDermott"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+boto3 = "^1.24.37"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
