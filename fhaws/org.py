@@ -114,12 +114,26 @@ def org_diagram(profile):
     for ou in structure:
         chart.append("Root --> %s[/%s\\]" % (ou.lower(), ou.upper()))
         prev = ''
-        for acct in structure[ou]:
-            if not prev:
-                chart.append("%s --> %s" % (ou.lower(), acct.lower()))
-            else:
-                chart.append("%s --> %s" % (prev.lower(), acct.lower()))
-            prev = acct.lower()
+        accts = structure[ou]
+        n = 15
+        if len(accts) > n:
+            chunks = [accts[i:i+n] for i in range(0, len(accts), n)]
+            for chunk in chunks:
+                for acct in chunk:
+                    if not prev:
+                        chart.append("%s --> %s" % (ou.lower(), acct.lower()))
+                    else:
+                        chart.append("%s --> %s" % (prev.lower(), acct.lower()))
+                    prev = acct.lower()
+                prev = ""
+
+        else:
+            for acct in structure[ou]:
+                if not prev:
+                    chart.append("%s --> %s" % (ou.lower(), acct.lower()))
+                else:
+                    chart.append("%s --> %s" % (prev.lower(), acct.lower()))
+                prev = acct.lower()
     return("\n".join(chart))
 
 
