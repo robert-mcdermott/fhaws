@@ -1,7 +1,9 @@
 # FHAWS
 
-Helper functions to make working with Boto3 easier
+Helper functions to make working with Boto3 and AWS easier via Python
 ## Organizations
+
+![Example Organization Diagram](/images/example-org-diagram-1.png)
 
 A collections of functions for AWS Organizations
 
@@ -75,3 +77,26 @@ Required parameters:
 2. parent: the id of the parent object
 3. child_type: the type of child objects you want ('ACCOUNT' or 'ORGANIZATIONAL_UNIT')
 
+### **account_name_lookup(profile)**
+
+Generate a account Id to Name lookup dictionary
+
+Required parameters:
+
+1. profile: the name of the AWS profile to use
+
+### **org_structure(profile)**
+
+Generate an dictionary containing the structure of the organization. OUs are Keys with a list of the children accounts as the value.
+
+Required parameters:
+
+1. profile: the name of the AWS profile to use
+
+### **org_diagram(profile)**
+
+Generate a mermaid formatted diagram of the organizational structure, similar to the example diagram at the top of the Organziations section above.
+
+Required parameters:
+
+1. profile: the name of the AWS profile to use
