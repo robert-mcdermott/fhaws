@@ -79,6 +79,51 @@ def getchildren(profile, parent, child_type):
     return(all_children)
 
 
+def account_name_lookup(profile):
+    """Generate account ID to Name lookup table"""
+    accounts = getaccounts(profile)
+    map = {}
+    for account in accounts:
+        map[account['Id']] = account['Name']
+    return(map)
+
+
+def org_structure(profile):
+    """Returns an ou to account dictionary"""
+    root = getroots(profile)[0]['Id']
+    lookup = account_name_lookup(profile)
+    ous = getous(profile, root)
+    s = {}
+    for ou in ous:
+        children = getchildren(profile, ou['Id'], 'ACCOUNT')
+        c = []
+        for child in children:
+            c.append(lookup[child['Id']])
+        s[ou['Name']] = c
+    return(s)
+
+
+def org_diagram(profile):
+    """Generate a Mermiad formated organization diagram"""
+    org = getorg("hdc-aws")
+    org_name = org["MasterAccountEmail"].split("@")[0].upper()
+    org_id = org["MasterAccountId"]
+    structure = org_structure(profile)
+    chart = ["flowchart TB"]
+    chart.append("Root(((\"%s\\n%s\")))" % (org_name, org_id))
+    for ou in structure:
+        chart.append("Root --> %s[/%s\\]" % (ou.lower(), ou.upper()))
+        prev = ''
+        for acct in structure[ou]:
+            if not prev:
+                chart.append("%s --> %s" % (ou.lower(), acct.lower()))
+            else:
+                chart.append("%s --> %s" % (prev.lower(), acct.lower()))
+            prev = acct.lower()
+    return("\n".join(chart))
+
+
+
 if __name__ == "__main__":
     import sys
     profile = sys.argv[1]
