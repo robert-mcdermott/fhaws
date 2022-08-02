@@ -100,3 +100,20 @@ Generate a mermaid formatted diagram of the organizational structure, similar to
 Required parameters:
 
 1. profile: the name of the AWS profile to use
+
+## IAM
+
+A collection for working with AWS IAM 
+
+```python
+import fhaws.iam as iam
+```
+
+### **get_users(profile)**
+
+Get all IAM user objects in the AWS account
+
+
+### **inventory_users(profile)**
+
+Get a CSV inventory of all IAM users in the AWS account
