@@ -1,4 +1,3 @@
-import re
 import boto3
 
 def get_instances(profile):
@@ -19,3 +18,14 @@ def get_instances(profile):
         all_instances.append(instance)
 
     return(all_instances)
+
+def get_regions(profile):
+    session = boto3.Session(profile_name=profile)
+    ec2 = session.client('ec2')
+    response = ec2.describe_regions()
+    regions = []
+    endpoints = []
+    for region in response["Regions"]:
+        regions.append(region["RegionName"])
+        endpoints.append(region["Endpoint"])
+    return(regions, endpoints)
