@@ -32,7 +32,10 @@ def inventory_users(profile):
         id = u["UserId"]
         arn = u["Arn"]
         cdate = u["CreateDate"]
-        pdate = u["PasswordLastUsed"]
+        try:
+            pdate = u["PasswordLastUsed"]
+        except:
+            pdate = "Never"
         inventory.append("%s, %s, %s, %s, %s" % (username, id, arn, cdate, pdate))
 
     return("\n".join(inventory))
