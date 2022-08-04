@@ -1,3 +1,5 @@
+from pydoc import cli
+import re
 import boto3
 
 
@@ -42,7 +44,17 @@ def inventory_users(profile):
 
 
 def get_mfa(profile):
-    pass
+    session = boto3.Session(profile_name=profile)
+    client = session.client("iam")
+    response = client.list_virtual_mfa_devices()
+    virtual_mfas = response['VirtualMFADevices']
+    for mfa in virtual_mfas:
+        print(mfa["SerialNumber"], end = '')
+        try:
+            print(mfa["User"]["UserName"], end = '')
+            print(mfa["EnableDate"])
+        except:
+            print("NA, NA")
 
 def get_api_keys(profile):
     pass
