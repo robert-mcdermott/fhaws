@@ -40,18 +40,18 @@ def inventory_users(profile):
     return("\n".join(inventory))
 
 
-def get_mfa(profile):
+def get_mfas(profile):
     session = boto3.Session(profile_name=profile)
     client = session.client("iam")
-    response = client.list_virtual_mfa_devices()
-    virtual_mfas = response['VirtualMFADevices']
-    for mfa in virtual_mfas:
-        print(mfa["SerialNumber"], end = '')
-        try:
-            print(mfa["User"]["UserName"], end = '')
-            print(mfa["EnableDate"])
-        except:
-            print("NA, NA")
+    response = client.list_virtual_mfa_devices(MaxItems=2)
+    mfas = response["VirtualMFADevices"]
+
+    while response["IsTruncated"]:
+        response = client.list_virtual_mfa_devices(Marker=response["Marker"], MaxItems=2)
+        mfas.extend(response["VirtualMFADevices"])
+    
+    return(mfas)
+    
 
 def get_api_keys(profile):
     pass
