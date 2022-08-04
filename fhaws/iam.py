@@ -1,7 +1,4 @@
-from pydoc import cli
-import re
 import boto3
-
 
 def get_users(profile):
     """get_users returns a list of all IAM user objects in the accounts"""
