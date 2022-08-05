@@ -139,7 +139,7 @@ import fhaws.iam as iam
 profile = 'aws-profile2'
 access_keys = iam.get_access_keys(profile)
 usernames = [user['UserName'] for user in iam.get_users(profile)]
-print("UserName, AccessKeyId, Status, CreateData")
+print("UserName, AccessKeyId, Status, CreateDate")
 for user in usernames:
     for key in access_keys:
         if key['UserName'] == user:
