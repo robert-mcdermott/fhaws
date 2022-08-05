@@ -1,3 +1,5 @@
+from curses.ascii import US
+from re import A
 import boto3
 
 def get_users(profile):
@@ -41,9 +43,10 @@ def inventory_users(profile):
 
 
 def get_mfas(profile):
+    "return a list of all MFA objects in the AWS account"
     session = boto3.Session(profile_name=profile)
     client = session.client("iam")
-    response = client.list_virtual_mfa_devices(MaxItems=2)
+    response = client.list_virtual_mfa_devices()
     mfas = response["VirtualMFADevices"]
 
     while response["IsTruncated"]:
@@ -53,8 +56,24 @@ def get_mfas(profile):
     return(mfas)
     
 
-def get_api_keys(profile):
-    pass
+def get_access_keys(profile, username=''):
+    """return a list of access keys for a specific users, or all access_keys"""
+    session = boto3.Session(profile_name=profile)
+    client = session.client("iam")
+    access_keys = []
+    if username:
+        response = client.list_access_keys(UserName=username)
+        if "AccessKeyMetadata" in response:
+            access_keys.append(response["AccessKeyMetadata"])
+    else:
+        usernames = [user['UserName'] for user in get_users(profile)]
+        for user in usernames:
+            response = client.list_access_keys(UserName=user)
+            if "AccessKeyMetadata" in response:
+                access_keys.extend(response["AccessKeyMetadata"])
+    
+    return(access_keys)
+
 
 def get_ssh_keys():
     pass
