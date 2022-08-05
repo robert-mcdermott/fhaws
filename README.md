@@ -129,10 +129,10 @@ Get a list of MFA objects for an entire AWS account
 
 ### **get_access_keys(profile, username='')**
 
-Get information on the access keys for a single user is a username is provided, or information all all access keys in the AWS account if the username is omitted.
+Get information on the access keys for a single user is a username is provided, or information for all access keys in the AWS account if the username is omitted.
 
 
-Example combining the fhaws.iam.get_users() and fhaws.iam.get_access_keys() functions to create a simple access keys report for an AWS account:
+Example combining the **fhaws.iam.get_users()** and **fhaws.iam.get_access_keys()** functions to create a simple access keys report for an AWS account:
 
 ```python
 import fhaws.iam as iam
@@ -163,9 +163,13 @@ user6:    AXAXYCYGMXZ4J3FAKE,  Active,   2022-07-14 15:41:14+00:00
 
 ## S3
 
-Future
+### **get_buckets(profile)**
 
+returns a list of all S3 buckets in the AWS account.
 ## EC2
 
-Future
+### **get_regions(profile)**
+
+returns a dictionary of all AWS regions in the form of "RegionName = EndpointURL"
+
 
