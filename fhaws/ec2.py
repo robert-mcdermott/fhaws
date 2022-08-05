@@ -1,8 +1,9 @@
 import boto3
 
-def get_instances(profile):
+def get_instances(profile, region):
     """get_users returns a list of all EC2 instances in the account"""
-    session = boto3.Session(profile_name=profile, region_name="us-west-2")
+    """need to add logic to get all regions, if region not provided"""
+    session = boto3.Session(profile_name=profile, region_name=region)
     client = session.client("ec2")
     response = client.describe_instances()
 
@@ -20,12 +21,13 @@ def get_instances(profile):
     return(all_instances)
 
 def get_regions(profile):
+    """get availible AWS region names and endpoints"""
     session = boto3.Session(profile_name=profile)
     ec2 = session.client('ec2')
     response = ec2.describe_regions()
-    regions = []
-    endpoints = []
+    regions = {}
     for region in response["Regions"]:
-        regions.append(region["RegionName"])
-        endpoints.append(region["Endpoint"])
-    return(regions, endpoints)
+        regions[region["RegionName"]] = region["Endpoint"]
+    
+    return(regions)
+    
