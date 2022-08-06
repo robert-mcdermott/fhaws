@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fhaws"
-version = "0.3.0"
+version = "0.3.1"
 description = "A module containing helper functions to make working with Boto3 and Amazon AWS easier with Python"
 authors = ["Robert McDermott"]
 license = "MIT"

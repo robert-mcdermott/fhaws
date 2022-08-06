@@ -165,11 +165,15 @@ user6:    AXAXYCYGMXZ4J3FAKE,  Active,   2022-07-14 15:41:14+00:00
 
 ### **get_buckets(profile)**
 
-returns a list of all S3 buckets in the AWS account.
+Returns a list of all S3 buckets in the AWS account.
 ## EC2
 
 ### **get_regions(profile)**
 
-returns a dictionary of all AWS regions in the form of "RegionName = EndpointURL"
+Returns a dictionary of all AWS regions in the form of "RegionName = EndpointURL"
+
+### **instance_inventory(profile, region='')**
+
+Generates a simple (need to add more fields) CSV report on the EC2 instances in an account. By default it will look for EC2 instances in all AWS regions around the globe. You can optionally provide a region to restrict the inventory to a specific region.
 
 
