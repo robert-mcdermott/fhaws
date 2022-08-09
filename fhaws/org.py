@@ -105,7 +105,7 @@ def org_structure(profile):
 
 def org_diagram(profile):
     """Generate a Mermiad formated organization diagram"""
-    org = getorg("hdc-aws")
+    org = getorg(profile)
     org_name = org["MasterAccountEmail"].split("@")[0].upper()
     org_id = org["MasterAccountId"]
     structure = org_structure(profile)
