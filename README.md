@@ -127,6 +127,66 @@ Get a CSV inventory of all IAM users in the AWS account
 Get a list of MFA objects for an entire AWS account
 
 
+Example combining the **iam.get_mfas()** and **iam.get_users()** functions to create a simple MFA compliance report (check to make sure that every user has an assigned MFA):
+
+```python
+import time
+import fhaws.iam as iam
+
+def mfa_compliance_report(account):
+    users = set([user['UserName'] for user in iam.get_users(account)])
+    mfas =  set([mfa['User']['UserName'] for mfa in iam.get_mfas(account)])
+    without_mfas = users - mfas 
+
+    print("\nMFA Compliance Report: {}\n{}".format(time.asctime(), "-" * 47))
+    print("Total Users: {}".format(len(users)))
+    print("Total MFAs: {}".format(len(mfas))) 
+    print("Users Without MFA: {}".format(len(without_mfas)))
+
+    if without_mfas:
+        print("Status: Not In Compliance ❌\n")
+        print("Users out of compliance 😡:")
+        for user in without_mfas:
+            print("\t🔥 {}".format(user))
+    else:
+        print("Status: In Compliance ✅\n")
+
+if __name__ == "__main__":
+    account = "prod_account" #profile to use
+    mfa_compliance_report(account)
+```
+
+Example of an account out of compliance:
+
+```text
+MFA Compliance Report: Fri Aug 12 12:14:19 2022
+-----------------------------------------------
+Total Users: 58
+Total MFAs: 52
+Users Without MFA: 6
+Status: Not In Compliance ❌
+
+Users out of compliance 😡:
+	🔥 billy_g
+	🔥 sammy_j
+	🔥 lazy_user
+	🔥 security_manager
+	🔥 joey_b
+	🔥 teddy_p
+```
+
+Example of an account in compliance:
+
+```text
+MFA Compliance Report: Fri Aug 12 12:18:15 2022
+-----------------------------------------------
+Total Users: 10
+Total MFAs: 10
+Users Without MFA: 0
+Status: In Compliance ✅
+```
+
+
 ### **get_access_keys(profile, username='')**
 
 Get information on the access keys for a single user is a username is provided, or information for all access keys in the AWS account if the username is omitted.
