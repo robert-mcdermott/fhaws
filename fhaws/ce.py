@@ -1,13 +1,15 @@
 import boto3
+from datetime import datetime, timedelta
 
-def get_charges(profile, firstMonth, lastMonth):
+def get_linked_account_charges(profile, start_date, end_date, resolution):
+    "Gather the charge details (discount, taxes, charges) for accounts linked to parent"
     accounts = {}
     session = boto3.Session(profile_name=profile)
     client = session.client('ce')
     response = client.get_cost_and_usage(
-                    #TimePeriod={'Start':firstMonth.strftime("%Y-%m-%d"),'End':lastMonth.strftime("%Y-%m-%d")},
-                    TimePeriod={'Start':firstMonth,'End':lastMonth},
-                    Granularity='MONTHLY',
+                    TimePeriod={'Start':start_date.strftime("%Y-%m-%d"),'End':end_date.strftime("%Y-%m-%d")},
+                    #TimePeriod={'Start':start_date,'End':end_date},
+                    Granularity=resolution,
                     Metrics=['UNBLENDED_COST'],
                     GroupBy=[
                         {'Type':'DIMENSION','Key':'LINKED_ACCOUNT'},
@@ -28,16 +30,22 @@ def get_charges(profile, firstMonth, lastMonth):
         if account_type == "Usage":
             accounts[accountId]['charges'] = cost
 
-    total_discounts = 0
-    total_charges = 0
-    for account in accounts:
-        print(account, accounts[account])
-        total_discounts += accounts[account]['discount']
-        total_charges += accounts[account]['charges'] 
+    return(accounts)
 
-    return accounts
+def accounts_with_taxes(profile):
+    "Accounts should be tax exempt, report accounts that have tax charges"
+    end_month = datetime.utcnow().date()
+    start_month = (end_month - timedelta(days=end_month.day)).replace(day=1)
+    accounts = get_linked_account_charges(profile, start_month, end_month, 'MONTHLY')
+    paying_taxes = []
+    for account in accounts:
+        if accounts[account]['tax'] > 0:
+            paying_taxes.append(account)
+    
+    return(paying_taxes)
+
 
 if __name__ == "__main__":
-    firstMonth  = "2022-07-01"
-    lastMonth = "2022-08-01"
-    get_charges('default', firstMonth, lastMonth)
+    pass
+
+    

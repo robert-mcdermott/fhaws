@@ -1,13 +1,13 @@
 # FHAWS
 
 Helper functions to make working with Boto3 and AWS easier via Python
-## Organizations
+## Organizations (org)
 
 A collections of functions for AWS Organizations
 
 Example diagram created by the "org_diagram" function:
 
-![Example Organization Diagram](/images/example-org-diagram-1.png)
+![Example Organization Diagram](https://raw.githubusercontent.com/robert-mcdermott/fhaws/main/images/example-org-diagram-1.png)
 
 
 ```python
@@ -104,7 +104,7 @@ Required parameters:
 
 1. profile: the name of the AWS profile to use
 
-## IAM
+## Identity and Access Management (iam)
 
 A collection for working with AWS IAM 
 
@@ -221,12 +221,16 @@ user6:    AXAXYCYGMXZ4J3FAKE,  Active,   2022-07-14 15:41:14+00:00
 ```
 
 
-## S3
+## Simple Storage Service (s3)
+
+```python
+import fhaws.s3 as s3
+```
 
 ### **get_buckets(profile)**
 
 Returns a list of all S3 buckets in the AWS account.
-## EC2
+## Elastic Compute Cloud (ec2)
 
 ### **get_regions(profile)**
 
@@ -236,4 +240,67 @@ Returns a dictionary of all AWS regions in the form of "RegionName = EndpointURL
 
 Generates a simple (need to add more fields) CSV report on the EC2 instances in an account. By default it will look for EC2 instances in all AWS regions around the globe. You can optionally provide a region to restrict the inventory to a specific region.
 
+## Cost Explorer (ce)
 
+```python
+import fhaws.ce as ce
+```
+### **get_linked_account_charges(profile, start_date, end_date, resolution)**
+
+Gather the charge details (discount, taxes, charges) for accounts linked to parent
+
+### **accounts_with_taxes(profile)**
+
+For organizations that are tax exempt, this function report accounts that have tax charges so they can be fixed
+
+## AWS Support (support)
+
+```python
+import fhaws.support as support
+```
+
+### **create_tax_exempt_support_case(profile, accounts)**
+
+Open a support request with AWS to have them change accounts to tax exempt status
+
+The following example uses uses a combination of the **fhaws.ce.accounts_with_taxes()** and **fhaws.support.create_tax_exempt_support_case()**functions to check to see if any AWS accounts that should be tax exempt have incurred any tax charges, and if so report the affected account IDs and opens an AWS support case to change them to tax exempt status.
+
+```python
+import fhaws.ce as ce
+import fhaws.support as support
+
+def tax_exempt_check_fix(awsroot):
+    "Checks to see if an account has incurred any taxes, and opens support ticket to correct"
+    taxed_accounts = ce.accounts_with_taxes(awsroot)
+    if taxed_accounts:
+        print("\n[%s]\nThe following AWS accounts need to be changed to tax exempt status:\n" % awsroot.upper())
+        for account in taxed_accounts:
+            print("\t💰 {}".format(account))
+
+        print("\nOpening AWS support case to correct the situation...")
+        support.create_tax_exempt_case(awsroot, taxed_accounts)
+        print("Done!") 
+    else:
+        print("\n[%s]\nAll linked accounts are tax exempt ✅\n" % awsroot.upper())
+    
+if __name__ == "__main__":
+    org_roots = ['org1_root', 'org2_root']
+    for org_root in org_roots:
+        tax_exempt_check_fix(org_root)
+```
+Output:
+
+```text
+[ORG1_ROOT]
+All linked accounts are tax exempt ✅
+
+
+[ORG2_ROOT]
+The following AWS accounts need to be changed to tax exempt status:
+
+	💰 548734312345
+	💰 684496612345
+
+Opening AWS support case to correct the situation...
+Done!
+```
