@@ -1,5 +1,3 @@
-from curses.ascii import US
-from re import A
 import boto3
 
 def get_users(profile):

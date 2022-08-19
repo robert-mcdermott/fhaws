@@ -5,16 +5,25 @@ Helper functions to make working with Boto3 and AWS easier via Python
 
 A collections of functions for AWS Organizations
 
-Example diagram created by the "org_diagram" function:
-
-![Example Organization Diagram](https://raw.githubusercontent.com/robert-mcdermott/fhaws/main/images/example-org-diagram-1.png)
-
 
 ```python
 import fhaws.org as org
 ```
 
 **Available Functions**
+
+### **org_diagram(profile)**
+
+Generate a mermaid formatted diagram of the organizational structure, similar to the example diagram at the top of the Organziations section above.
+
+Required parameters:
+
+1. profile: the name of the AWS profile to use
+
+Example diagram created by the "org_diagram" function:
+
+![Example Organization Diagram](https://raw.githubusercontent.com/robert-mcdermott/fhaws/main/images/example-org-diagram-1.png)
+
 
 ### **getaccounts(profile)**
 
@@ -96,13 +105,6 @@ Required parameters:
 
 1. profile: the name of the AWS profile to use
 
-### **org_diagram(profile)**
-
-Generate a mermaid formatted diagram of the organizational structure, similar to the example diagram at the top of the Organziations section above.
-
-Required parameters:
-
-1. profile: the name of the AWS profile to use
 
 ## Identity and Access Management (iam)
 
