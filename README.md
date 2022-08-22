@@ -255,6 +255,43 @@ Gather the charge details (discount, taxes, charges) for accounts linked to pare
 
 For organizations that are tax exempt, this function report accounts that have tax charges so they can be fixed
 
+### **generate_linked_charges_chart(profile, title)**
+
+Generates a Mermaid formatted pie chart config of the costs of all linked child accounts in the organization for the past full month billing period.
+
+Example:
+
+```python
+import fhaws.ce as ce
+
+print(ce.generate_linked_charges_chart('org123', "AWS ORG123 - Linked Account Charges - July 2022")) >> org123-costs-2022-07.mmd
+```
+
+Output:
+
+```bash
+$cat org123-2022-07.mmd
+
+pie showData
+	title AWS ORG123 - Linked Account Charges - July 2022
+	 "038484906123" : 1092.47
+	 "117573455123" : 942.09
+	 "179231715123" : 780.81
+	 "234226685123" : 744.45
+	 "308100700123" : 489.53
+	 "461840194123" : 4302.18
+	 "526566302123" : 1471.22
+	 "548734384123" : 827.85
+	 "635528216123" : 1644.61
+	 "684496621123" : 353.78
+	 "822906032123" : 242.79
+	 "855079939123" : 815.45
+	 "897555590123" : 728.69
+```
+
+![Example Account Charges](https://raw.githubusercontent.com/robert-mcdermott/fhaws/main/images/org123-costs-2022-07.png)
+
+
 ## AWS Support (support)
 
 ```python
@@ -265,7 +302,7 @@ import fhaws.support as support
 
 Open a support request with AWS to have them change accounts to tax exempt status
 
-The following example uses uses a combination of the **fhaws.ce.accounts_with_taxes()** and **fhaws.support.create_tax_exempt_support_case()**functions to check to see if any AWS accounts that should be tax exempt have incurred any tax charges, and if so report the affected account IDs and opens an AWS support case to change them to tax exempt status.
+The following example uses uses a combination of the **fhaws.ce.accounts_with_taxes()** and **fhaws.support.create_tax_exempt_support_case()** functions to check to see if any AWS accounts that should be tax exempt have incurred any tax charges, and if so report the affected account IDs and opens an AWS support case to change them to tax exempt status.
 
 ```python
 import fhaws.ce as ce

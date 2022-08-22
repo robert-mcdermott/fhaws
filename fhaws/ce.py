@@ -44,6 +44,17 @@ def accounts_with_taxes(profile):
     
     return(paying_taxes)
 
+def generate_linked_charges_chart(profile, title):
+    "Generates a mermaid formated pie chart config of the linked account charges in an AWS Org"
+    end_month = datetime.utcnow().date()
+    start_month = (end_month - timedelta(days=end_month.day)).replace(day=1)
+    accounts = get_linked_account_charges(profile, start_month, end_month, 'MONTHLY')
+    chart = ["pie showData"]
+    chart.append("\ttitle {}".format(title))
+    for account in accounts:
+        chart.append("\t \"{}\" : {}".format(account, round(accounts[account]['charges'], 2)))
+    
+    return('\n'.join(chart))
 
 if __name__ == "__main__":
     pass
