@@ -1,6 +1,13 @@
 # FHAWS
 
 Helper functions to make working with Boto3 and AWS easier via Python
+
+**Installing**
+
+```python
+pip install fhaws --upgrade
+```
+
 ## Organizations (org)
 
 A collections of functions for AWS Organizations
