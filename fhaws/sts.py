@@ -14,8 +14,4 @@ def role_chain(profile, role, child_account):
     assumed_role_object = sts_client.assume_role(
             RoleArn=str("arn:aws:iam::" + child_account_id + ":role/" + role),
             RoleSessionName="AssumeRoleSession")
-    newsession_id = assumed_role_object['Credentials']['AccessKeyId']
-    newsession_key = assumed_role_object['Credentials']['SecretAccessKey']
-    newsession_token = assumed_role_object['Credentials']['SessionToken']
-    #print('Successfully logged in to account ' + child_account)
-    return newsession_id, newsession_key, newsession_token
+    return assumed_role_object
