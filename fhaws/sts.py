@@ -4,7 +4,7 @@
 def role_chain(profile, role, child_account):
     from fhaws.org import getaccounts
     import boto3
-    acctlist = getaccounts('default')
+    acctlist = getaccounts(profile)
     for acct in acctlist:
         if (acct['Name']) == child_account:
             child_account_id = (acct['Id'])
@@ -17,5 +17,5 @@ def role_chain(profile, role, child_account):
     newsession_id = assumed_role_object['Credentials']['AccessKeyId']
     newsession_key = assumed_role_object['Credentials']['SecretAccessKey']
     newsession_token = assumed_role_object['Credentials']['SessionToken']
-    #print('Successfully logged in to account ' + child_account)
+
     return newsession_id, newsession_key, newsession_token
