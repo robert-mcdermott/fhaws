@@ -1,3 +1,4 @@
+import re
 import boto3
 
 def get_instances(profile, region):
@@ -6,19 +7,13 @@ def get_instances(profile, region):
     session = boto3.Session(profile_name=profile, region_name=region)
     client = session.client("ec2")
     response = client.describe_instances()
-
-    all_instances = []
-
     instances = response["Reservations"]
 
-    while "NextToken" in instances:
-        instances = client.describe_instances(NextToken=response["NextToken"])
-        instances.extend(instances["Reservations"])
-    
-    for instance in instances:
-        all_instances.append(instance)
-
-    return(all_instances)
+    while "NextToken" in response:
+        response = client.describe_instances(NextToken=response["NextToken"])
+        instances.extend(response["Reservations"])
+ 
+    return(instances)
 
 
 
