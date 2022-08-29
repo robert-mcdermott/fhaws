@@ -44,14 +44,18 @@ def instance_inventory(profile, region=''):
                     keyname = i['KeyName']
                 else:
                     keyname = ''
-                priv_ip = i['PrivateIpAddress']
+                if 'PrivateIpAddress' in i:
+                    priv_ip = i['PrivateIpAddress']
+                else:
+                    priv_ip = ''
                 az = i['Placement']['AvailabilityZone']
                 launch_time = i['LaunchTime']
                 name = ''
-                for tag in i['Tags']:
-                    if tag['Key'] == 'Name':
-                        name = tag['Value']
-                        continue
+                if 'Tags' in i:
+                    for tag in i['Tags']:
+                        if tag['Key'] == 'Name':
+                            name = tag['Value']
+                            continue
 
                 inventory.append("%s, %s, %s, %s, %s, %s, %s, %s, %s, %s" % (instanceid, name, instancetype, state, keyname,
                                                                             region, az, priv_ip, pub_ip, launch_time))
