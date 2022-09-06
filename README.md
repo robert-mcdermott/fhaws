@@ -350,3 +350,14 @@ The following AWS accounts need to be changed to tax exempt status:
 Opening AWS support case to correct the situation...
 Done!
 ```
+
+## Security Token Service (sts)
+
+```python
+import fhaws.ce as sts
+```
+
+### **role_chain(profile, role, child_account):**
+
+Fetch temporary credentials to access a child account; returns session_id, session_key, session_token. 
+
